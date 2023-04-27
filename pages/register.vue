@@ -32,6 +32,7 @@
 
 <script>
 export default {
+  auth: 'guest',
   data() {
     return {
       register: {

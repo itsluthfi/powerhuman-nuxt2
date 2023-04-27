@@ -24,6 +24,7 @@
 
 <script>
 export default {
+  auth: 'guest',
   data() {
     return {
       login: {
