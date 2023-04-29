@@ -52,64 +52,34 @@
             <div class="text-xl font-medium text-dark">Available</div>
             <p class="text-grey">Empower company</p>
           </div>
-          <a href="roles-create.html" class="btn btn-primary">New Role</a>
+          <NuxtLink
+            :to="{ name: 'companies-id-roles-create' }"
+            href="roles-create.html"
+            class="btn btn-primary"
+            >New Role</NuxtLink
+          >
         </div>
       </div>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-[30px]">
-        <div class="items-center card !flex-row gap-4">
+        <p v-if="$fetchState.pending">Fetching roles...</p>
+        <div
+          class="items-center card !flex-row gap-4"
+          v-else
+          v-for="roles in roles.data.result.data"
+        >
           <a
             href="#"
             class="absolute inset-0 focus:ring-2 ring-primary rounded-[26px]"
           ></a>
           <img src="/assets/svgs/ric-flag.svg" alt="" />
           <div>
-            <div class="mb-1 font-semibold text-dark">Product Designer</div>
-            <p class="text-grey">12 people assigned</p>
-          </div>
-        </div>
-        <div class="items-center card !flex-row gap-4">
-          <a
-            href="#"
-            class="absolute inset-0 focus:ring-2 ring-primary rounded-[26px]"
-          ></a>
-          <img src="/assets/svgs/ric-flag.svg" alt="" />
-          <div>
-            <div class="mb-1 font-semibold text-dark">iOS Engineer</div>
-            <p class="text-grey">12 people assigned</p>
-          </div>
-        </div>
-        <div class="items-center card !flex-row gap-4">
-          <a
-            href="#"
-            class="absolute inset-0 focus:ring-2 ring-primary rounded-[26px]"
-          ></a>
-          <img src="/assets/svgs/ric-flag.svg" alt="" />
-          <div>
-            <div class="mb-1 font-semibold text-dark">Marketing</div>
-            <p class="text-grey">12 people assigned</p>
-          </div>
-        </div>
-        <div class="items-center card !flex-row gap-4">
-          <a
-            href="#"
-            class="absolute inset-0 focus:ring-2 ring-primary rounded-[26px]"
-          ></a>
-          <img src="/assets/svgs/ric-flag.svg" alt="" />
-          <div>
-            <div class="mb-1 font-semibold text-dark">DevOps Power</div>
-            <p class="text-grey">12 people assigned</p>
-          </div>
-        </div>
-        <div class="items-center card !flex-row gap-4">
-          <a
-            href="#"
-            class="absolute inset-0 focus:ring-2 ring-primary rounded-[26px]"
-          ></a>
-          <img src="/assets/svgs/ric-flag.svg" alt="" />
-          <div>
-            <div class="mb-1 font-semibold text-dark">Quality Assurance</div>
-            <p class="text-grey">12 people assigned</p>
+            <div class="mb-1 font-semibold text-dark">
+              {{ roles.name }}
+            </div>
+            <p class="text-grey">
+              {{ roles.responsibilities_count }} responsibilities
+            </p>
           </div>
         </div>
       </div>
@@ -121,5 +91,18 @@
 export default {
   layout: 'dashboard',
   middleware: 'auth',
+  data() {
+    return {
+      roles: [],
+    }
+  },
+  async fetch() {
+    this.roles = await this.$axios.get('/role', {
+      params: {
+        company_id: this.$route.params.id,
+        limit: 100,
+      },
+    })
+  },
 }
 </script>
